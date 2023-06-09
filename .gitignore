@@ -1,0 +1,13 @@
+*.idea
+*~
+*__pycache__*
+*.pyc
+*.pytest_cache
+*.ipynb_checkpoints/
+.vscode
+data
+output
+backup.git
+disabled
+test.py
+lib/sotas/MixFormer/checkpoints
