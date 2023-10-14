@@ -147,6 +147,10 @@ class Tracker:
             self.init_visualization()
 
         # Get init information
+        '''JieChu:
+        This init_info() function is in evaluation/data.py,and as the param is None,
+        it will return the bbox and timestamp of the 1st annotation.
+        '''
         init_info = seq.init_info()
         is_single_object = not seq.multiobj_mode
 
@@ -319,7 +323,11 @@ class Tracker:
                 t_template = timestamps[idx_end]
             elif stream_setting.slicing == 'Last':
                 t_template = init_info.get('init_timestamp')*1e6
-                idx_end = interpolation_search(timestamps,t_template)
+                idx_end = interpolation_search(timestamps,t_template)  
+                '''JieChu:
+                I can figure out how this slicing==Adaptive plays its role.
+                Maybe it's another TODO.
+                '''          
             elif stream_setting.slicing == 'Adaptive':
                 from pytracking.utils.sampling import EventStreamSampler
                 stream_sampler = EventStreamSampler()
@@ -340,6 +348,9 @@ class Tracker:
         else:
             raise NotImplementedError
         event_rep = convert_event_img_aedat(template_events,stream_setting.representation)
+        '''JieChu:
+        t_convert record the couvert time of the template frame.
+        '''
         t_convert = perf_counter()*1e6 - t0
         # event_img_pil = transform(event_rep)
         # event_img_array = np.array(event_img_pil)

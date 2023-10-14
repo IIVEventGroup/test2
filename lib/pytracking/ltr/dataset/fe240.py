@@ -53,6 +53,8 @@ class FE240(BaseVideoDataset):
             self.sequence_list = self._get_sequence_list(split = 'total')
             seq_ids = list(range(0, len(self.sequence_list)))
             # seq_ids = list(range(0, len(self.sequence_list)))
+        
+        self.sequence_list = [self.sequence_list[i] for i in seq_ids]
 
         # for seq in seq_ids:
         #     if seq not in self.sequence_list:

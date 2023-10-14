@@ -44,7 +44,7 @@ def stream_eval(gt_anno_t:list, raw_result:dict):
 
 def eval_sequence_stream(sequence, tracker, stream_setting):
 
-    print("Stream Evaluation: {} {} {}".format(sequence.name, tracker.name, tracker.run_id, stream_setting.id))
+    print("Stream Evaluation: {} {} {} {}".format(sequence.name, tracker.name, tracker.run_id, stream_setting.id))
     tracker_name = tracker.name
     param = tracker.parameter_name
     gt_anno_t = sequence.ground_truth_t
@@ -55,9 +55,9 @@ def eval_sequence_stream(sequence, tracker, stream_setting):
         # save_dir = os.path.join(tracker.results_dir_rt_final,'18d') # temporal
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
-    if os.path.exists(os.path.join(save_dir, sequence.name+'.txt')):
-        print('Already exists. Skipped. ')
-        return
+    # if os.path.exists(os.path.join(save_dir, sequence.name+'.txt')):
+    #     print('Already exists. Skipped. ')
+    #     return
 
     raw_result = pickle.load(open(os.path.join(tracker.results_dir_rt, str(stream_setting.id), sequence.name+'.pkl'), 'rb'))
     assert raw_result['stream_setting'] == stream_setting.id

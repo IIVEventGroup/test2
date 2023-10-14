@@ -27,8 +27,8 @@ class ESOT500(BaseVideoDataset):
                         options can be used at the same time.
             data_fraction - Fraction of dataset to be used. The complete dataset is used by default
         """
-        super().__init__('ESOT500', root, image_loader)
         root = env_settings().esot500_dir if root is None else root
+        super().__init__('ESOT500', root, image_loader)
         self.ltr_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
         # all folders inside the root
 
@@ -120,6 +120,6 @@ class ESOT500(BaseVideoDataset):
         return self.sequence_list[seq_id]
 
 if __name__ == '__main__':
-    dataset = ESOT500(root='data/EventSOT/EventSOT500/EventSOT500/pre500',split='test')
+    dataset = ESOT500(root=env_settings().esot500_dir,split='test')
 
     print(dataset)

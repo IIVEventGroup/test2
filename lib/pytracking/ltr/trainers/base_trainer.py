@@ -64,6 +64,9 @@ class BaseTrainer:
                 if load_latest:
                     self.load_checkpoint()
 
+                '''JieChu:
+                self.epoch may has been updated in self.load_checkpoint by "setattr(self, key, checkpoint_dict[key])"
+                '''
                 for epoch in range(self.epoch+1, max_epochs+1):
                     self.epoch = epoch
 

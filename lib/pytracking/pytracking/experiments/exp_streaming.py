@@ -226,7 +226,8 @@ def streaming_18_range():
 
 def streaming_31():
     trackers =  trackers_single
-    dataset = get_dataset('esot500s','esot2s')
+    # dataset = get_dataset('esot500s','esot2s')
+    dataset = get_dataset('esot500s')
     stream_setting = load_stream_setting('s31')
     return trackers, dataset, stream_setting
 

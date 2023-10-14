@@ -460,7 +460,7 @@ def generate_formatted_report(row_labels, scores, table_name=''):
 
 
 def print_results(trackers, dataset, report_name, merge_results=False,
-                  plot_types=('success'), **kwargs):
+                  plot_types=('success'), results_saved_file=None,**kwargs):
     """ Print the results for the given trackers in a formatted table
     args:
         trackers - List of trackers to evaluate
@@ -515,6 +515,10 @@ def print_results(trackers, dataset, report_name, merge_results=False,
     tracker_disp_names = [get_tracker_display_name(trk) for trk in tracker_names]
     report_text = generate_formatted_report(tracker_disp_names, scores, table_name=report_name)
     print(report_text)
+    if results_saved_file!=None:
+        with open(results_saved_file, "w") as file:
+            file.write(report_text)
+            print(f"The experiment result has been saved in '{results_saved_file}'.")
 
 
 def plot_got_success(trackers, report_name):

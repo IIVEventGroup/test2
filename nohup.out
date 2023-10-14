@@ -1,0 +1,17 @@
+usage: JieChuOccupyGPU.py [-h] Command MemThres OutputFile
+JieChuOccupyGPU.py: error: the following arguments are required: OutputFile
+usage: JieChuOccupyGPU.py [-h] [--MemThres MEMTHRES] [--OutputFile OUTPUTFILE]
+                          Command
+JieChuOccupyGPU.py: error: unrecognized arguments: 24262
+JieChuOccupyGPU_Output.txt
+JieChuOccupyGPU_Output.txt
+123
+JieChuOccupyGPU_Output.txt
+JieChuOccupyGPU_Output.txt
+123
+JieChuOccupyGPU_Output.txt
+JieChuOccupyGPU_Output.txt
+JieChuOccupyGPU_Output.txt
+JieChuOccupyGPU_Output.txt
+usage: JieChuOccupyGPU.py [-h] [--MemThres MEMTHRES] Command OutputFile
+JieChuOccupyGPU.py: error: unrecognized arguments: tomp JieChu_tomp101_esot500 JieChuOccupyGPU_Output_tomp101_esot500.txt

@@ -209,6 +209,9 @@ def run_sequence_stream(seq: Sequence, tracker: Tracker, stream_setting, debug=F
 
     visdom_info = {} if visdom_info is None else visdom_info
 
+    # '''JieChu:
+    # I want the previous result file be covered
+    # '''
     if _results_exist() and not debug:
         print('FPS: {}'.format(-1))
         return
@@ -309,5 +312,5 @@ def run_dataset_stream(dataset, trackers, stream_setting, debug=False, threads=0
     elif mode == 'parallel':
         param_list = [(seq, tracker_info, stream_setting, debug, visdom_info) for seq, tracker_info in product(dataset, trackers)]
         with multiprocessing.Pool(processes=threads) as pool:
-            pool.starmap(run_sequence, param_list)
+            pool.starmap(run_sequence_stream, param_list)
     print('Done')

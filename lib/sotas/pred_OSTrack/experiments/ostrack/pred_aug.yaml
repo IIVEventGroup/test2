@@ -6,7 +6,7 @@ DATA:
   - 0.406
   SEARCH:
     CENTER_JITTER: 3
-    FACTOR: 4
+    FACTOR: 4.0
     SCALE_JITTER: 0.25
     SIZE: 256
     NUMBER: 1
@@ -26,17 +26,7 @@ DATA:
     - ESOT125
     - ESOT050
     - ESOT020
-    - ESOT2
-    - ESOT2_2_2
-    - ESOT2_2_8
-    - ESOT2_2_20
-    - ESOT2_2_50
     DATASETS_RATIO:
-    - 1
-    - 1
-    - 1
-    - 1
-    - 1
     - 1
     - 1
     - 1
@@ -45,7 +35,7 @@ DATA:
     SAMPLE_PER_EPOCH: 60000
   VAL:
     DATASETS_NAME:
-    - FE240_val
+    - ESOT500_val
     DATASETS_RATIO:
     - 1
     SAMPLE_PER_EPOCH: 5000
@@ -86,6 +76,6 @@ TRAIN:
 TEST:
   EPOCH: 300
   SEARCH_FACTOR: 4
-  SEARCH_SIZE: 270
+  SEARCH_SIZE: 256
   TEMPLATE_FACTOR: 2.0
   TEMPLATE_SIZE: 128

@@ -5,9 +5,16 @@
 *.pytest_cache
 *.ipynb_checkpoints/
 .vscode
-data
+/data
+lib/pytracking/data
+lib/sotas/Stark/data
 output
 backup.git
 disabled
 test.py
 lib/sotas/MixFormer/checkpoints
+*.pth.tar
+*.pth
+lib/sotas/OSTrack/tensorboard
+lib/sotas/pred_OSTrack/tensorboard
+JieChu*.txt
