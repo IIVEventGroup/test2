@@ -17,8 +17,8 @@ def parameters():
     deep_params = TrackerParams()
 
     # Patch sampling parameters
-    params.max_image_sample_size = (16*14)**2   # Maximum image sample size
-    params.min_image_sample_size = (16*14)**2   # Minimum image sample size
+    params.max_image_sample_size = (18*16)**2   # Maximum image sample size
+    params.min_image_sample_size = (18*16)**2   # Minimum image sample size
     params.search_area_scale = 5                # Scale relative to target size
     params.feature_size_odd = False             # Good to use False for even-sized kernels and vice versa
 
@@ -98,7 +98,7 @@ def parameters():
 
     # Setup the feature extractor (which includes the IoUNet)
     deep_fparams = FeatureParams(feature_params=[deep_params])
-    deep_feat = deep.ATOMResNet18(net_path='/home/test4/code/EventBenchmark/lib/pytracking/ltr/checkpoints/checkpoints/ltr/bbreg/atom_esot500/ATOMnet_ep0050.pth.tar', output_layers=['layer3'], fparams=deep_fparams, normalize_power=2)
+    deep_feat = deep.ATOMResNet18(net_path='/home/test4/code/EventBenchmark/lib/pytracking/ltr/checkpoints/checkpoints/ltr/bbreg/JieChu_atom_esot500/ATOMnet_ep0050.pth.tar', output_layers=['layer3'], fparams=deep_fparams, normalize_power=2)
     params.features = MultiResolutionExtractor([deep_feat])
 
     return params

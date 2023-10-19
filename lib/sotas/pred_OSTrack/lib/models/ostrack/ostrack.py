@@ -39,7 +39,6 @@ class OSTrack(nn.Module):
 
     def forward(self, template: torch.Tensor,
                 search: torch.Tensor,
-                time_to_next = None,
                 ce_template_mask=None,
                 ce_keep_rate=None,
                 return_last_attn=False,
@@ -53,13 +52,13 @@ class OSTrack(nn.Module):
         feat_last = x #[batch_size,320,768]
         if isinstance(x, list):
             feat_last = x[-1]
-        out = self.forward_head(feat_last, time_to_next=time_to_next,)
+        out = self.forward_head(feat_last)
 
         out.update(aux_dict)
         out['backbone_feat'] = x
         return out
 
-    def forward_head(self, cat_feature, gt_score_map=None, time_to_next=None):
+    def forward_head(self, cat_feature, gt_score_map=None):
         """
         cat_feature: output embeddings of the backbone, it can be (HW1+HW2, B, C) or (HW2, B, C)
         """
@@ -80,17 +79,17 @@ class OSTrack(nn.Module):
 
         elif self.head_type == "CENTER":
             # run the center head
-            score_map_ctr, bbox, size_map, offset_map, speed_map, pred_next_bbox = self.box_head(opt_feat, gt_score_map, time_to_next)
+            score_map_ctr, bbox, size_map, offset_map, speed_map, bbox_speed = self.box_head(opt_feat, gt_score_map)
             # outputs_coord = box_xyxy_to_cxcywh(bbox)
             outputs_coord = bbox
             outputs_coord_new = outputs_coord.view(bs, Nq, 4)
-            pred_next_bbox = pred_next_bbox.view(bs, Nq, 4)
+            bbox_speed = bbox_speed.view(bs, Nq, 4)
             out = {'pred_boxes': outputs_coord_new,
                    'score_map': score_map_ctr,
                    'size_map': size_map,
                    'offset_map': offset_map,
                    'speed_map': speed_map,
-                   'pred_next_bbox': pred_next_bbox}
+                   'bbox_speed': bbox_speed,}
             return out
         else:
             raise NotImplementedError

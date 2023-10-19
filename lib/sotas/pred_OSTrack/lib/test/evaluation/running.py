@@ -16,17 +16,8 @@ def _save_tracker_output(seq: Sequence, tracker: Tracker, output: dict, stream_s
     """Saves the output of the tracker."""
 
     if not os.path.exists(tracker.results_dir):
-        print("create tracking result dir:", tracker.results_dir)
         os.makedirs(tracker.results_dir)
 
-    # if seq.dataset in ['esot500s', 'esot2s']:
-
-    #     if not os.path.exists(os.path.join(tracker.results_dir_rt, seq.dataset)):
-    #         os.makedirs(os.path.join(tracker.results_dir_rt, seq.dataset))
-    #     base_results_path_rt = os.path.join(tracker.results_dir_rt, seq.dataset, seq.name)
-    #     out_path= '{}.pkl'.format(base_results_path_rt)
-    #     pickle.dump(output, open(out_path, 'wb'))
-    #     return
     if seq.dataset in ['esot500s', 'esot2s']:
         save_dir = os.path.join(tracker.results_dir_rt, str(stream_setting.id))
         if not os.path.exists(save_dir):
@@ -35,15 +26,11 @@ def _save_tracker_output(seq: Sequence, tracker: Tracker, output: dict, stream_s
         out_path= '{}.pkl'.format(save_results_path_rt)
         pickle.dump(output, open(out_path, 'wb'))
         return
-        
-    if seq.dataset in ['trackingnet', 'got10k']:
-        if not os.path.exists(os.path.join(tracker.results_dir, seq.dataset)):
-            os.makedirs(os.path.join(tracker.results_dir, seq.dataset))
-    '''2021.1.5 create new folder for these two datasets'''
-    if seq.dataset in ['trackingnet', 'got10k']:
-        base_results_path = os.path.join(tracker.results_dir, seq.dataset, seq.name)
-    else:
-        base_results_path = os.path.join(tracker.results_dir, seq.name)
+    
+    base_results_path = os.path.join(tracker.results_dir, seq.name)
+    segmentation_path = os.path.join(tracker.segmentation_dir, seq.name)
+
+    frame_names = [os.path.splitext(os.path.basename(f))[0] for f in seq.frames]
 
     def save_bb(file, data):
         tracked_bb = np.array(data).astype(int)
@@ -174,12 +161,12 @@ def run_sequence(seq: Sequence, tracker: Tracker, debug=False, num_gpu=8):
     if not debug:
         _save_tracker_output(seq, tracker, output)
 
-def run_sequence_stream(seq: Sequence, tracker: Tracker, stream_setting, debug=False, visdom_info=None):
+def run_sequence_stream(seq: Sequence, tracker: Tracker, stream_setting, debug=False, pred_next=0, visdom_info=None):
     """Runs a tracker on a sequence."""
 
     def _results_exist():
         if seq.dataset in ['esot500s','esot2s']:
-            bbox_file = '{}/{}.txt'.format(tracker.results_dir_rt, seq.name)
+            bbox_file = '{}/{}/{}.pkl'.format(tracker.results_dir_rt, stream_setting.id, seq.name)
             return os.path.isfile(bbox_file)
         elif seq.object_ids is None:
             bbox_file = '{}/{}.txt'.format(tracker.results_dir, seq.name)
@@ -191,17 +178,20 @@ def run_sequence_stream(seq: Sequence, tracker: Tracker, stream_setting, debug=F
 
     visdom_info = {} if visdom_info is None else visdom_info
 
+    print('Tracker: {} {} {} ,  Sequence: {}, Stream setting: {} '.format(tracker.name, tracker.parameter_name, tracker.run_id, seq.name, stream_setting.id))
+
+    # '''JieChu:
+    # I want the previous result file be covered
+    # '''
     if _results_exist() and not debug:
         print('FPS: {}'.format(-1))
         return
 
-    print('Tracker: {} {} {} ,  Sequence: {}, Stream setting: {} '.format(tracker.name, tracker.parameter_name, tracker.run_id, seq.name, stream_setting.id))
-
     if debug:
-        output = tracker.run_sequence(seq, stream_setting, debug=debug, visdom_info=visdom_info)
+        output = tracker.run_sequence(seq, stream_setting, debug=debug, pred_next=pred_next, visdom_info=visdom_info)
     else:
         try:
-            output = tracker.run_sequence(seq, stream_setting, debug=debug, visdom_info=visdom_info)
+            output = tracker.run_sequence(seq, stream_setting, debug=debug, pred_next=pred_next, visdom_info=visdom_info)
         except Exception as e:
             print(e)
             return
@@ -260,7 +250,7 @@ def run_dataset(dataset, trackers, debug=False, threads=0, num_gpus=8):
             pool.starmap(run_sequence, param_list)
     print('Done, total time: {}'.format(str(timedelta(seconds=(time.time() - dataset_start_time)))))
 
-def run_dataset_stream(dataset, trackers, stream_setting, debug=False, threads=0, visdom_info=None,):
+def run_dataset_stream(dataset, trackers, stream_setting, debug=False, threads=0, pred_next=0, visdom_info=None,):
     """Runs a list of trackers on a dataset.
     args:
         dataset: List of Sequence instances, forming a dataset.
@@ -285,7 +275,7 @@ def run_dataset_stream(dataset, trackers, stream_setting, debug=False, threads=0
     if mode == 'sequential':
         for seq in dataset:
             for tracker_info in trackers:
-                run_sequence_stream(seq, tracker_info, stream_setting, debug=debug, visdom_info=visdom_info)
+                run_sequence_stream(seq, tracker_info, stream_setting, debug=debug, pred_next=pred_next, visdom_info=visdom_info)
     elif mode == 'parallel':
         param_list = [(seq, tracker_info, stream_setting, debug, visdom_info) for seq, tracker_info in product(dataset, trackers)]
         with multiprocessing.Pool(processes=threads) as pool:

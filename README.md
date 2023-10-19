@@ -78,8 +78,10 @@ ln -s /PATH/TO/EventSOT-C ./data/
 
 # Environment settings for pytracking. Saved at pytracking/evaluation/local.py
 python -c "from pytracking.evaluation.environment import create_default_local_file; create_default_local_file()"
+python -c "from ltr.admin.environment import create_default_local_file; create_default_local_file()"
 
 # modify the dataset path in 
+lib/pytracking/ltr/admin/local.py # paths about training
 pytracking/evaluation/local.py  # paths about testing
 
 bash install.sh conda_install_path StreamTracking

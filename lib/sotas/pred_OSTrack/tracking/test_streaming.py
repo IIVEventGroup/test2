@@ -2,7 +2,7 @@ import os
 import sys
 import argparse
 import importlib
-os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 prj_path = os.path.join(os.path.dirname(__file__), '..')
 if prj_path not in sys.path:
@@ -12,11 +12,11 @@ if pytracking_path not in sys.path:
     sys.path.append(pytracking_path)
 print(sys.path)
 
-# from lib.test.evaluation import get_dataset
-# from lib.test.evaluation.running import run_dataset, run_dataset_stream
+from lib.test.evaluation import get_dataset
+from lib.test.evaluation.running import run_dataset, run_dataset_stream
 
-from pytracking.evaluation import get_dataset
-from pytracking.evaluation.running import run_dataset, run_dataset_stream
+# from pytracking.evaluation import get_dataset
+# from pytracking.evaluation.running import run_dataset, run_dataset_stream
 
 # from lib.sotas.OSTrack.lib.test.evaluation.tracker_orig import Tracker
 from lib.test.evaluation.tracker import Tracker
@@ -53,7 +53,7 @@ def run_tracker(tracker_name, tracker_param, run_id=None, dataset_name='otb', se
 
     run_dataset(dataset, trackers, debug, threads, num_gpus=num_gpus)
 
-def run_tracker_stream(tracker_name, tracker_param, stream_setting, run_id=None, dataset_name='otb', sequence=None, debug=0, threads=0,
+def run_tracker_stream(tracker_name, tracker_param, stream_setting, run_id=None, dataset_name='otb', sequence=None, debug=0, threads=0,pred_next=0,
                 visdom_info=None):
     """Run tracker on sequence or dataset.
     args:
@@ -74,10 +74,10 @@ def run_tracker_stream(tracker_name, tracker_param, stream_setting, run_id=None,
     if sequence is not None:
         dataset = [dataset[sequence]]
 
-    trackers = [Tracker(tracker_name, tracker_param, dataset_name, run_id)]
+    trackers = [Tracker(tracker_name, tracker_param, dataset_name, run_id,pred_next)]
     stream_setting = load_stream_setting(stream_setting) # dict
 
-    run_dataset_stream(dataset, trackers, stream_setting, debug, threads, visdom_info=visdom_info )
+    run_dataset_stream(dataset, trackers, stream_setting, debug, threads,pred_next, visdom_info=visdom_info )
 
 def main():
     parser = argparse.ArgumentParser(description='Run tracker on sequence or dataset.')
@@ -90,6 +90,7 @@ def main():
     parser.add_argument('--debug', type=int, default=0, help='Debug level.')
     parser.add_argument('--threads', type=int, default=0, help='Number of threads.')
     parser.add_argument('--num_gpus', type=int, default=1)
+    parser.add_argument('--pred_next', type=int, choices=[0, 1], default=0)  # whether to predict
 
     args = parser.parse_args()
     try:
@@ -98,7 +99,7 @@ def main():
         seq_name = args.sequence
 
     run_tracker_stream(args.tracker_name, args.tracker_param,args.stream_setting, args.runid, args.dataset_name, seq_name, args.debug,
-                args.threads)
+                args.threads, args.pred_next)
 
 
 if __name__ == '__main__':

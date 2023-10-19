@@ -129,7 +129,7 @@ def _save_tracker_output(seq: Sequence, tracker: Tracker, output: dict, stream_s
                 imwrite_indexed(os.path.join(segmentation_path, '{}.png'.format(frame_name)), frame_seg)
 
 
-def run_sequence(seq: Sequence, tracker: Tracker, stream_setting=None, debug=False, visdom_info=None):
+def run_sequence(seq: Sequence, tracker: Tracker, debug=False, visdom_info=None):
     """Runs a tracker on a sequence."""
 
     def _results_exist():
@@ -150,11 +150,14 @@ def run_sequence(seq: Sequence, tracker: Tracker, stream_setting=None, debug=Fal
 
     visdom_info = {} if visdom_info is None else visdom_info
 
+    print('Tracker: {} {} {} ,  Sequence: {}'.format(tracker.name, tracker.parameter_name, tracker.run_id, seq.name))
+    
+    # '''JieChu:
+    # I want the previous result file be covered
+    # '''
     if _results_exist() and not debug:
         print('FPS: {}'.format(-1))
         return
-
-    print('Tracker: {} {} {} ,  Sequence: {}'.format(tracker.name, tracker.parameter_name, tracker.run_id, seq.name))
 
     if debug:
         output = tracker.run_sequence(seq, debug=debug, visdom_info=visdom_info)
@@ -209,14 +212,14 @@ def run_sequence_stream(seq: Sequence, tracker: Tracker, stream_setting, debug=F
 
     visdom_info = {} if visdom_info is None else visdom_info
 
+    print('Tracker: {} {} {} ,  Sequence: {}, Stream setting: {} '.format(tracker.name, tracker.parameter_name, tracker.run_id, seq.name, stream_setting.id))
+
     # '''JieChu:
     # I want the previous result file be covered
     # '''
     if _results_exist() and not debug:
         print('FPS: {}'.format(-1))
         return
-
-    print('Tracker: {} {} {} ,  Sequence: {}, Stream setting: {} '.format(tracker.name, tracker.parameter_name, tracker.run_id, seq.name, stream_setting.id))
 
     if debug:
         output = tracker.run_sequence(seq, stream_setting, debug=debug, visdom_info=visdom_info)

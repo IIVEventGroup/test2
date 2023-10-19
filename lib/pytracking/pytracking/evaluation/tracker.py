@@ -243,6 +243,7 @@ class Tracker:
                 else:
                     time.sleep(0.1)
 
+            #我记得就是在这一句报了错
             image = self._read_image(frame_path)
 
             start_time = time.time()

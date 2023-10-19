@@ -9,15 +9,11 @@ def parameters():
 
     params.use_gpu = True
 
-    params.train_feature_size = 18
-    params.feature_stride = 16
-    params.image_sample_size = params.train_feature_size*params.feature_stride
+    params.image_sample_size = 18*16
     params.search_area_scale = 5
-    params.border_mode = 'inside_major'
-    params.patch_max_scale_change = 1.5
 
     # Learning parameters
-    params.sample_memory_size = 2
+    params.sample_memory_size = 50
     params.learning_rate = 0.01
     params.init_samples_minimum_weight = 0.25
     params.train_skipping = 20
@@ -32,8 +28,12 @@ def parameters():
     params.window_output = False
 
     # Init augmentation parameters
-    params.use_augmentation = False
-    params.augmentation = {}
+    params.use_augmentation = True
+    params.augmentation = {'fliplr': True,
+                           'rotate': [10, -10, 45, -45],
+                           'blur': [(3,1), (1, 3), (2, 2)],
+                           'relativeshift': [(0.6, 0.6), (-0.6, 0.6), (0.6, -0.6), (-0.6,-0.6)],
+                           'dropout': (2, 0.2)}
 
     params.augmentation_expansion_factor = 2
     params.random_shift_factor = 1/3
@@ -47,14 +47,22 @@ def parameters():
     params.dispalcement_scale = 0.8
     params.hard_negative_learning_rate = 0.02
     params.update_scale_when_uncertain = True
-    params.conf_ths = 0.9
-    params.search_area_rescaling_at_occlusion = True
 
-    params.net = NetWithBackbone(net_path='/home/test4/code/EventBenchmark/lib/pytracking/ltr/checkpoints/checkpoints/ltr/tomp/JieChu_tomp101_esot500/ToMPnet_ep0300.pth.tar', use_gpu=params.use_gpu)
+    # IoUnet parameters
+    params.iounet_augmentation = False
+    params.iounet_use_log_scale = True
+    params.iounet_k = 3
+    params.num_init_random_boxes = 9
+    params.box_jitter_pos = 0.1
+    params.box_jitter_sz = 0.5
+    params.maximal_aspect_ratio = 6
+    params.box_refinement_iter = 5
+    params.box_refinement_step_length = 1
+    params.box_refinement_step_decay = 1
+
+    params.net = NetWithBackbone(net_path='/home/test4/code/EventBenchmark/lib/pytracking/ltr/checkpoints/checkpoints/ltr/dimp/JieChu_dimp50_fe240/DiMPnet_ep0050.pth.tar',
+                                 use_gpu=params.use_gpu)
 
     params.vot_anno_conversion_type = 'preserve_area'
-
-    params.use_gt_box = True
-    params.plot_iou = True
 
     return params

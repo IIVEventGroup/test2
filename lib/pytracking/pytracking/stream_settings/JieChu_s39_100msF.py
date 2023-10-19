@@ -1,9 +1,9 @@
-from pytracking.utils import TrackerParams
+﻿from pytracking.utils import TrackerParams
 from pytracking.features.net_wrappers import NetWithBackbone, NetWrapper
 
 def parameters():
     params = TrackerParams()
-    params.id = 14
+    params.id = 39
     """Standard Setting Part"""
     """ id:14 is designed to simulate the running of id:18 to reproduce the results"""
     # Hardware
@@ -33,8 +33,7 @@ def parameters():
         'tomp_JieChu_tomp50_esot500':20*1e3,#added by JieChu
         'tomp_tomp101':24*1e3,#added by JieChu, however uncertain...
         'tomp_JieChu_tomp101_esot500':24*1e3,#added by JieChu, however uncertain...
-        'ostrack_pred_esot500_bs4':16*1e3,
-        'ostrack_pred_esot500mix_bs4':16*1e3,
+        'ostrack_vitb_256_mae_ce_32x4_ep300':16*1e3,
         'ostrack_trial4_vitb_256_mae_ce_32x4_aligned':16*1e3,
         'ostrack_trial6_ostrack256_aug1':16*1e3,
         'ostrack_trial8_ostrack256':16*1e3,
@@ -67,8 +66,7 @@ def parameters():
         'tomp_JieChu_tomp50_esot500':7*1e3,#added by JieChu
         'tomp_tomp101':14*1e3,#added by JieChu, however uncertain...
         'tomp_JieChu_tomp101_esot500':14*1e3,#added by JieChu, however uncertain...
-        'ostrack_pred_esot500_bs4':10*1e3,
-        'ostrack_pred_esot500mix_bs4':10*1e3,
+        'ostrack_vitb_256_mae_ce_32x4_ep300':10*1e3,
         'ostrack_trial4_vitb_256_mae_ce_32x4_aligned':10*1e3,
         'ostrack_trial6_ostrack256_aug1':10*1e3,
         'ostrack_trial8_ostrack256':10*1e3,
@@ -88,8 +86,8 @@ def parameters():
     '''User-define Part'''
     # Slicing
     params.slicing = 'FxTime' # FxTime, FxNum, Adaptive, Last
-    params.window_size = 20*1e3 # unit:us
-    params.window_size_template = 20*1e3 # unit:us
+    params.window_size = 100*1e3 # unit:us
+    params.window_size_template = 50*1e3 # unit:us
     params.num_events = 5000
     params.adaptive_ = '' # Adaptive method, e.g. sampling
 

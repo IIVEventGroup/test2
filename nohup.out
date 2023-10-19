@@ -15,3 +15,11 @@ JieChuOccupyGPU_Output.txt
 JieChuOccupyGPU_Output.txt
 usage: JieChuOccupyGPU.py [-h] [--MemThres MEMTHRES] Command OutputFile
 JieChuOccupyGPU.py: error: unrecognized arguments: tomp JieChu_tomp101_esot500 JieChuOccupyGPU_Output_tomp101_esot500.txt
+usage: JieChuOccupyGPU.py [-h] [--MemThres MEMTHRES] Command OutputFile
+JieChuOccupyGPU.py: error: the following arguments are required: OutputFile
+usage: run_experiment.py [-h] [--debug DEBUG] [--threads THREADS]
+                         experiment_module experiment_name
+run_experiment.py: error: argument --threads: expected one argument
+usage: run_experiment.py [-h] [--debug DEBUG] [--threads THREADS]
+                         experiment_module experiment_name
+run_experiment.py: error: argument --threads: expected one argument

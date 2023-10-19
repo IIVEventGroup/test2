@@ -69,7 +69,6 @@ class OSTrackActor(BaseActor):
 
         out_dict = self.net(template=template_list,
                             search=search_img,
-                            time_to_next=self.time_to_next,
                             ce_template_mask=box_mask_z,
                             ce_keep_rate=ce_keep_rate,
                             return_last_attn=False)
@@ -108,11 +107,11 @@ class OSTrackActor(BaseActor):
         # 2023.10.9 add pred_next_bbox loss
         if self.settings.pred_next:
             gt_next_bbox = gt_dict['pred_next_anno'][-1]  # (Ns, batch, 4) (x1,y1,w,h) -> (batch, 4)
-            pred_next_bbox = pred_dict['pred_next_bbox']
+            pred_next_bbox = pred_dict['bbox_speed']
             if torch.isnan(pred_next_bbox).any():
                 raise ValueError("Network outputs is NAN! Stop Training")
             num_queries = pred_next_bbox.size(1)
-            pred_next_bbox_vec = box_cxcywh_to_xyxy(pred_next_bbox).view(-1, 4)
+            pred_next_bbox_vec = box_cxcywh_to_xyxy(pred_next_bbox).view(-1, 4) * self.time_to_next + pred_boxes_vec.detach() # pred_next
             gt_next_bbox_vec = box_xywh_to_xyxy(gt_next_bbox)[:, None, :].repeat((1, num_queries, 1)).view(-1, 4).clamp(min=0.0,max=1.0)
             # compute giou and iou of pred_next
             try:
@@ -122,7 +121,7 @@ class OSTrackActor(BaseActor):
             # compute l1 loss of pred_next
             pred_next_l1_loss = self.objective['l1'](pred_next_bbox_vec, gt_next_bbox_vec)  # (BN,4) (BN,4)
 
-            loss += 16.8 * (self.loss_weight['giou'] * pred_next_giou_loss + self.loss_weight['l1'] * pred_next_l1_loss)
+            loss += 1 * (self.loss_weight['giou'] * pred_next_giou_loss + self.loss_weight['l1'] * pred_next_l1_loss)
                 
 
         if return_status:

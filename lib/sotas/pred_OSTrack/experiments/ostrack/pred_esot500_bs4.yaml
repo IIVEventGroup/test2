@@ -5,9 +5,9 @@ DATA:
   - 0.456
   - 0.406
   SEARCH:
-    CENTER_JITTER: 0.01 # for pred_next, reduece the jitter factor
+    CENTER_JITTER: 3 # for pred_next, reduece the jitter factor
     FACTOR: 4.0
-    SCALE_JITTER: 0.01 # for pred_next, reduece the jitter factor
+    SCALE_JITTER: 0.25 # for pred_next, reduece the jitter factor
     SIZE: 256
     NUMBER: 1
   STD:

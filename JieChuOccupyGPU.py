@@ -33,7 +33,7 @@ def main():
     parser = argparse.ArgumentParser(description='Occupy the idle GPU and run your command.')
     parser.add_argument('Command', type=str, help='Your command.')
     parser.add_argument('OutputFile',type=str, help="The file which remain all the ouput of this script and its subprocess.")
-    parser.add_argument('--MemThres', type=int, default=3000, help='The threshold of the graphics memory which you take it granted to run your command.')
+    parser.add_argument('--MemThres', type=int, default=9000, help='The threshold of the graphics memory which you take it granted to run your command.')
 
     args = parser.parse_args()
 

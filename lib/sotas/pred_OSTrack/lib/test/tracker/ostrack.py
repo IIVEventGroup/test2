@@ -17,9 +17,9 @@ from lib.utils.ce_utils import generate_mask_cond
 
 
 class OSTrack(BaseTracker):
-    def __init__(self, params, dataset_name):
+    def __init__(self, params, settings, dataset_name):
         super(OSTrack, self).__init__(params)
-        network = build_ostrack(params.cfg, training=False)
+        network = build_ostrack(params.cfg, settings, training=False)
         network.load_state_dict(torch.load(self.params.checkpoint, map_location='cpu')['net'], strict=True)
         self.cfg = params.cfg
         self.network = network.cuda()
@@ -87,11 +87,14 @@ class OSTrack(BaseTracker):
         # add hann windows
         pred_score_map = out_dict['score_map']
         response = self.output_window * pred_score_map
-        pred_boxes = self.network.box_head.cal_bbox(response, out_dict['size_map'], out_dict['offset_map'])
-        pred_boxes = pred_boxes.view(-1, 4)
+        pred_boxes, bbox_speed = self.network.box_head.cal_bbox(response, out_dict['size_map'], out_dict['offset_map'], out_dict['speed_map'])
+        pred_boxes = pred_boxes.view(-1, 4) #(0,1)
+        bbox_speed = bbox_speed.view(-1, 4)
         # Baseline: Take the mean of all pred boxes as the final result
         pred_box = (pred_boxes.mean(
             dim=0) * self.params.search_size / resize_factor).tolist()  # (cx, cy, w, h) [0,1]
+        bbox_speed = (bbox_speed.mean(
+            dim=0) * self.params.search_size / resize_factor).tolist()
         # get the final box result
         self.state = clip_box(self.map_box_back(pred_box, resize_factor), H, W, margin=10)
 
@@ -129,7 +132,8 @@ class OSTrack(BaseTracker):
             return {"target_bbox": self.state,
                     "all_boxes": all_boxes_save}
         else:
-            return {"target_bbox": self.state}
+            return {"target_bbox": self.state,
+                    "bbox_speed":bbox_speed}
 
     def map_box_back(self, pred_box: list, resize_factor: float):
         cx_prev, cy_prev = self.state[0] + 0.5 * self.state[2], self.state[1] + 0.5 * self.state[3]

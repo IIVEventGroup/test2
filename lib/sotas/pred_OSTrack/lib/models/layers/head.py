@@ -136,19 +136,19 @@ class CenterPredictor(nn.Module, ):
             if p.dim() > 1:
                 nn.init.xavier_uniform_(p)
 
-    def forward(self, x, gt_score_map=None, time_to_next=None):
+    def forward(self, x, gt_score_map=None):
         """ Forward pass with input x. """
         score_map_ctr, size_map, offset_map, speed_map = self.get_score_map(x)
 
         # assert gt_score_map is None
         if gt_score_map is None:
-            bbox, pred_next_bbox = self.cal_bbox(score_map_ctr, size_map, offset_map, speed_map, time_to_next)
+            bbox, bbox_speed = self.cal_bbox(score_map_ctr, size_map, offset_map, speed_map)
         else:
-            bbox, pred_next_bbox = self.cal_bbox(gt_score_map.unsqueeze(1), size_map, offset_map, speed_map, time_to_next)
+            bbox, bbox_speed = self.cal_bbox(gt_score_map.unsqueeze(1), size_map, offset_map, speed_map)
 
-        return score_map_ctr, bbox, size_map, offset_map, speed_map, pred_next_bbox
+        return score_map_ctr, bbox, size_map, offset_map, speed_map, bbox_speed
 
-    def cal_bbox(self, score_map_ctr, size_map, offset_map, speed_map, time_to_next, return_score=False):
+    def cal_bbox(self, score_map_ctr, size_map, offset_map, speed_map=None, return_score=False):
         max_score, idx = torch.max(score_map_ctr.flatten(1), dim=1, keepdim=True) #(bs,1),(bs,1)
         idx_y = idx // self.feat_sz
         idx_x = idx % self.feat_sz
@@ -166,13 +166,12 @@ class CenterPredictor(nn.Module, ):
         if self.pred_next:
             idx = idx[:,0,:].unsqueeze(1).expand(idx.shape[0], 4, 1)
             speed = speed_map.flatten(2).gather(dim=2,index=idx).squeeze(-1)
-            pred_next_bbox = bbox.detach() + speed * time_to_next
         else:
-            pred_next_bbox = None
+            speed = None
 
         if return_score:
             return bbox, max_score
-        return bbox, pred_next_bbox
+        return bbox, speed
 
     def get_pred(self, score_map_ctr, size_map, offset_map):
         max_score, idx = torch.max(score_map_ctr.flatten(1), dim=1, keepdim=True)
