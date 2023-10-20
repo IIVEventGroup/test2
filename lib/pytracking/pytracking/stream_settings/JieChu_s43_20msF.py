@@ -85,7 +85,7 @@ def parameters():
 
     '''User-define Part'''
     # Slicing
-    params.slicing = 'FixTime' # FxTime, FxNum, Adaptive, Last
+    params.slicing = 'FxTime' # FxTime, FxNum, Adaptive, Last
     params.window_size = 20*1e3 # unit:us
     params.window_size_template = 20*1e3 # unit:us
     params.num_events = 5000

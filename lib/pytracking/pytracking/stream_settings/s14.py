@@ -33,14 +33,14 @@ def parameters():
         'tomp_JieChu_tomp50_esot500':20*1e3,#added by JieChu
         'tomp_tomp101':24*1e3,#added by JieChu, however uncertain...
         'tomp_JieChu_tomp101_esot500':24*1e3,#added by JieChu, however uncertain...
-        'ostrack_pred_esot500_bs4':16*1e3,
-        'ostrack_pred_esot500mix_bs4':16*1e3,
-        'ostrack_trial4_vitb_256_mae_ce_32x4_aligned':16*1e3,
-        'ostrack_trial6_ostrack256_aug1':16*1e3,
-        'ostrack_trial8_ostrack256':16*1e3,
-        'ostrack_trial9_ostrack256':16*1e3,
-        'ostrack_baseline':16*1e3,
-        'ostrack_aug':16*1e3,
+        'ostrack_pred_esot500_bs4':8.5*1e3,
+        'ostrack_pred_esot500mix_bs4':8.5*1e3,
+        'ostrack_trial4_vitb_256_mae_ce_32x4_aligned':8.5*1e3,
+        'ostrack_trial6_ostrack256_aug1':8.5*1e3,
+        'ostrack_trial8_ostrack256':8.5*1e3,
+        'ostrack_trial9_ostrack256':8.5*1e3,
+        'ostrack_baseline':8.5*1e3,
+        'ostrack_aug':8.5*1e3,
         'stark_s_baseline':16*1e3,
                           }
     
@@ -67,14 +67,14 @@ def parameters():
         'tomp_JieChu_tomp50_esot500':7*1e3,#added by JieChu
         'tomp_tomp101':14*1e3,#added by JieChu, however uncertain...
         'tomp_JieChu_tomp101_esot500':14*1e3,#added by JieChu, however uncertain...
-        'ostrack_pred_esot500_bs4':10*1e3,
-        'ostrack_pred_esot500mix_bs4':10*1e3,
-        'ostrack_trial4_vitb_256_mae_ce_32x4_aligned':10*1e3,
-        'ostrack_trial6_ostrack256_aug1':10*1e3,
-        'ostrack_trial8_ostrack256':10*1e3,
-        'ostrack_trial9_ostrack256':10*1e3,
-        'ostrack_baseline':10*1e3,
-        'ostrack_aug':10*1e3,
+        'ostrack_pred_esot500_bs4':1*1e3,
+        'ostrack_pred_esot500mix_bs4':1*1e3,
+        'ostrack_trial4_vitb_256_mae_ce_32x4_aligned':1*1e3,
+        'ostrack_trial6_ostrack256_aug1':1*1e3,
+        'ostrack_trial8_ostrack256':1*1e3,
+        'ostrack_trial9_ostrack256':1*1e3,
+        'ostrack_baseline':1*1e3,
+        'ostrack_aug':1*1e3,
         'stark_s_baseline':25*1e3,
                           }
     params.sim_disturb = 0.0 # disturbance around runtime
